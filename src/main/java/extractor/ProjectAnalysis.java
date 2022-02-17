@@ -12,6 +12,8 @@ import model.ProjectAnalysisDifferences;
 import model.ProjectAnalysisQuality;
 import model.ProjectAnalysisResult;
 import model.QualityProfile;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
 
 import static java.util.logging.Level.INFO;
 
@@ -20,9 +22,11 @@ public class ProjectAnalysis {
   private static final Logger LOGGER = Logger.getLogger(ProjectAnalysis.class.getName());
 
   private final ApiConnector apiConnector;
+  private final MetricsConnector metricsConnector;
 
-  public ProjectAnalysis(ApiConnector apiConnector) {
+  public ProjectAnalysis(ApiConnector apiConnector, MetricsConnector metricsConnector) {
     this.apiConnector = apiConnector;
+    this.metricsConnector = metricsConnector;
   }
 
   public ProjectAnalysisResult extractResult(String projectKey, String branch) {
@@ -136,6 +140,14 @@ public class ProjectAnalysis {
     return pq.setDifferences(processDifferences(
       pq.getBaseComponentResult(), pq.getTargetComponentResult()
     ));
+  }
+
+  public ProjectAnalysisQuality extractMetrics(ProjectAnalysisQuality pq) {
+    metricsConnector.getLogs(
+      pq.getTargetComponent().getKey(),
+      pq.getTargetComponentDefaultBranch(),
+      LocalDateTime.parse("17/02/2022 13:00:00", DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss")).toDate());
+    return pq;
   }
 
   private Optional<Component> findMatchingComponent(Component base, List<Component> availableTargets) {
