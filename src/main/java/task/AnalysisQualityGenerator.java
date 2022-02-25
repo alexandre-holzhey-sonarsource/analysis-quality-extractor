@@ -79,7 +79,6 @@ public class AnalysisQualityGenerator {
 //    } catch (IOException e) {
 //      e.printStackTrace();
 //    }
-    // TODO: Retrieve dependencies resolution
     // TODO: refine quality results (only issues differences? plugin version? quality profile?)
   }
 }

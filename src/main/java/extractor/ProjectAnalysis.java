@@ -12,8 +12,6 @@ import model.ProjectAnalysisDifferences;
 import model.ProjectAnalysisQuality;
 import model.ProjectAnalysisResult;
 import model.QualityProfile;
-import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormat;
 
 import static java.util.logging.Level.INFO;
 
@@ -143,10 +141,12 @@ public class ProjectAnalysis {
   }
 
   public ProjectAnalysisQuality extractMetrics(ProjectAnalysisQuality pq) {
-    metricsConnector.getLogs(
-      pq.getTargetComponent().getKey(),
-      pq.getTargetComponentDefaultBranch(),
-      LocalDateTime.parse("17/02/2022 13:00:00", DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss")).toDate());
+    pq.setTargetComponentAnalysisMetrics(
+      metricsConnector.getMetrics(
+        pq.getTargetComponent().getKey(),
+        pq.getTargetComponentDefaultBranch(),
+        pq.getBaseComponent().getAnalysisDate())
+    );
     return pq;
   }
 
