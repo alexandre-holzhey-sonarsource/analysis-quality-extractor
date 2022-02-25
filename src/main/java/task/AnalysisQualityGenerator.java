@@ -70,21 +70,14 @@ public class AnalysisQualityGenerator {
     // projectsQuality.forEach(System.out::println);
 
     try {
-      processAnalysisQuality(projectsQuality);
+      AnalysisQualityProcessing analysisQualityProcessing = new AnalysisQualityProcessing(false, "src/main/output/");
+      analysisQualityProcessing.process(projectsQuality);
+
+      AnalysisQualityProcessing analysisQualityProcessing2 = new AnalysisQualityProcessing(true, "src/main/output_commons/");
+      analysisQualityProcessing2.process(projectsQuality);
       compareLoc(projectsQuality);
     } catch (IOException e) {
       e.printStackTrace();
     }
-//    try {
-//      AnalysisQualityProcessing analysisQualityProcessing = new AnalysisQualityProcessing(false, "src/main/output/");
-//      analysisQualityProcessing.process(projectsQuality);
-//
-//      AnalysisQualityProcessing analysisQualityProcessing2 = new AnalysisQualityProcessing(true, "src/main/output_commons/");
-//      analysisQualityProcessing2.process(projectsQuality);
-//      compareLoc(projectsQuality);
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-    // TODO: refine quality results (only issues differences? plugin version? quality profile?)
   }
 }

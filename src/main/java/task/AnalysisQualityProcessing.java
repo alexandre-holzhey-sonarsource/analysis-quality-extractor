@@ -4,7 +4,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,10 +16,6 @@ import model.Issue;
 import model.ProjectAnalysisDifferences;
 import model.ProjectAnalysisMetrics;
 import model.ProjectAnalysisQuality;
-
-import static java.lang.Float.parseFloat;
-import static java.lang.Float.sum;
-import static java.lang.Integer.parseInt;
 
 public class AnalysisQualityProcessing {
 
@@ -136,9 +131,6 @@ public class AnalysisQualityProcessing {
 
   private static Summary generateOutputForProject(List<Issue> allAdded, List<Issue> allMissing, List<Issue> baseIssues,
     String folder, String name, ProjectAnalysisMetrics metrics) throws IOException {
-    FileWriter fileWriter = new FileWriter(folder + name);
-    PrintWriter printWriter = new PrintWriter(fileWriter);
-  private static Summary generateOutputForProject(List<Issue> allAdded, List<Issue> allMissing, List<Issue> baseIssues, String folder, String name) throws IOException {
     PrintWriter printWriter = printWriter(folder, name);
 
     List<Issue> added = allAdded.stream()
@@ -292,9 +284,6 @@ public class AnalysisQualityProcessing {
     return summary;
   }
 
-  private static void writeSummary(List<Summary> summary, String fileName) throws IOException {
-    FileWriter fileWriter = new FileWriter(OUTPUT_FOLDER + fileName);
-    PrintWriter printWriter = new PrintWriter(fileWriter);
   private void writeSummary(List<Summary> summary, String fileName) throws IOException {
     PrintWriter printWriter = printWriter(outputFolder, fileName);
 
