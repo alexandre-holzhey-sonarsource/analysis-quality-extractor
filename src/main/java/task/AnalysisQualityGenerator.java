@@ -67,8 +67,14 @@ public class AnalysisQualityGenerator {
       .map(projectAnalysis::processDifferences)
       .collect(Collectors.toList());
 
-    projectsQuality.forEach(System.out::println);
+    // projectsQuality.forEach(System.out::println);
 
+    try {
+      processAnalysisQuality(projectsQuality);
+      compareLoc(projectsQuality);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 //    try {
 //      AnalysisQualityProcessing analysisQualityProcessing = new AnalysisQualityProcessing(false, "src/main/output/");
 //      analysisQualityProcessing.process(projectsQuality);
