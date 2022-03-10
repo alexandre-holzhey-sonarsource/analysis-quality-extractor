@@ -39,7 +39,8 @@ public class ProjectAnalysis {
       String componentKeys = mainComponents.subList(i, Math.min(i + pageSize, mainComponents.size())).stream()
         .map(Component::getKey)
         .collect(Collectors.joining(","));
-      issues.addAll(apiConnector.getAllComponentIssues(componentKeys));
+      List<Issue> allComponentIssues = apiConnector.getAllComponentIssues(componentKeys);
+      issues.addAll(allComponentIssues);
     }
 
     List<Component> testComponents = apiConnector.getAllComponents(projectKey, branch, "UTS");
@@ -70,7 +71,7 @@ public class ProjectAnalysis {
     return result;
   }
 
-  public ProjectAnalysisDifferences processDifferences(ProjectAnalysisResult base, ProjectAnalysisResult target) {
+  public static ProjectAnalysisDifferences processDifferences(ProjectAnalysisResult base, ProjectAnalysisResult target) {
     Set<Issue> baseIssues = new HashSet<>(base.getIssues());
     Set<Issue> targetIssues = new HashSet<>(target.getIssues());
 
@@ -137,7 +138,7 @@ public class ProjectAnalysis {
     return pq;
   }
 
-  public ProjectAnalysisQuality processDifferences(ProjectAnalysisQuality pq) {
+  public static ProjectAnalysisQuality processDifferences(ProjectAnalysisQuality pq) {
     return pq.setDifferences(processDifferences(
       pq.getBaseComponentResult(), pq.getTargetComponentResult()
     ));

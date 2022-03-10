@@ -97,7 +97,7 @@ public class AnalysisQualityProcessing {
   }
 
   private Summary generateOutputForProject(ProjectAnalysisQuality projectAnalysisQuality, boolean onlyJava) throws IOException {
-    String name = projectAnalysisQuality.getBaseComponent().getName();
+    String name = projectAnalysisQuality.getBaseComponent().getName().replaceAll(":", "_");
     ProjectAnalysisDifferences differences = projectAnalysisQuality.getDifferences();
 
     List<Issue> baseIssues;
@@ -268,17 +268,18 @@ public class AnalysisQualityProcessing {
 
   private static String printAnalysisMetrics(ProjectAnalysisMetrics metrics, PrintWriter printWriter) {
     printWriter.println(HEADER_METRICS);
-    String summary = String.format("%d;%d;%d;%f;%d;%d;%d;%d;%d",
-      metrics.getJavaAnalysisFinishedCount(),
-      metrics.getWorkerForJavaCloneDuration(),
-      metrics.getWorkerForJavaTaskDuration(),
-      metrics.getDownloadedArtifactsPercentage(),
-      metrics.getParsedArtifactsCount(),
-      metrics.getConstructDependencyGraphDuration(),
-      metrics.getDownloadDependenciesDuration(),
-      metrics.getResolveDependenciesDuration(),
-      metrics.getWorkerForJavaQueueLatency()
-    );
+    String summary = "No metric";
+//    String summary = String.format("%d;%d;%d;%f;%d;%d;%d;%d;%d",
+//      metrics.getJavaAnalysisFinishedCount(),
+//      metrics.getWorkerForJavaCloneDuration(),
+//      metrics.getWorkerForJavaTaskDuration(),
+//      metrics.getDownloadedArtifactsPercentage(),
+//      metrics.getParsedArtifactsCount(),
+//      metrics.getConstructDependencyGraphDuration(),
+//      metrics.getDownloadDependenciesDuration(),
+//      metrics.getResolveDependenciesDuration(),
+//      metrics.getWorkerForJavaQueueLatency()
+//    );
     printWriter.println(summary);
 
     return summary;

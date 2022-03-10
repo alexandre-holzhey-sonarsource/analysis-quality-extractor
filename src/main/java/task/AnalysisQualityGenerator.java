@@ -47,10 +47,8 @@ public class AnalysisQualityGenerator {
 
   public static void main(String[] args) {
 
-    AWSLogs logsClient = AWSLogsClientBuilder.defaultClient();
-    MetricsConnector cloudConnector = new MetricsConnector(logsClient);
     ApiConnector apiConnector = new ApiConnector(SC_STAGING_URL);
-    ProjectAnalysis projectAnalysis = new ProjectAnalysis(apiConnector, cloudConnector);
+    ProjectAnalysis projectAnalysis = new ProjectAnalysis(apiConnector, null);
 
     List<Component> baseComponents = apiConnector.getOrganizationProjects(ORG_AUTOSCAN_FOR_JAVA_CI);
     List<Component> targetComponents = apiConnector.getOrganizationProjects(ORG_AUTOSCAN_FOR_JAVA_FORK);
@@ -63,8 +61,8 @@ public class AnalysisQualityGenerator {
       .filter(p -> !p.getBaseComponentResult().getIssues().isEmpty())
       .map(pq -> projectAnalysis.extractTargetResult(pq, targetComponents))
       .filter(ProjectAnalysisQuality::hasTarget)
-      .map(projectAnalysis::extractMetrics)
-      .map(projectAnalysis::processDifferences)
+//      .map(projectAnalysis::extractMetrics)
+      .map(ProjectAnalysis::processDifferences)
       .collect(Collectors.toList());
 
     // projectsQuality.forEach(System.out::println);

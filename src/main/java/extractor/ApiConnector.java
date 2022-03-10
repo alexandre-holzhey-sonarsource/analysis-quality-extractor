@@ -8,11 +8,13 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import model.Component;
 import model.ComponentIssues;
 import model.ComponentRules;
@@ -27,6 +29,7 @@ import model.QualityProfile;
 import model.Rule;
 import model.measure.ComponentMeasure;
 import model.measure.Measure;
+import org.apache.http.HttpHeaders;
 
 import static java.util.logging.Level.WARNING;
 
@@ -38,6 +41,7 @@ public class ApiConnector {
 
   private static final String API_COMPONENTS_TREE = "/api/components/tree";
   private static final String API_COMPONENTS_SEARCH_PROJECTS = "/api/components/search_projects";
+  private static final String API_COMPONENTS_SEARCH = "/api/components/search";
   private static final String API_ISSUES_SEARCH = "/api/issues/search";
   private static final String API_SERVER_VERSION = "/api/server/version";
   private static final String API_PLUGINS_INSTALLED = "/api/plugins/installed";
@@ -138,13 +142,24 @@ public class ApiConnector {
     return GSON.fromJson(doHttpRequest(uri), ComponentSearchProjects.class).getComponents();
   }
 
+  public List<Component> getProjects(List<String> organization) {
+    return organization.stream()
+      .map(this::getProject)
+      .collect(Collectors.toList());
+  }
+
+  public Component getProject(String project) {
+    URI uri = createURI(baseUrl, API_COMPONENTS_SEARCH, "qualifiers=TRK&q=" + project);
+    return GSON.fromJson(doHttpRequest(uri), ComponentSearchProjects.class).getComponents().get(0);
+  }
+
   public List<Rule> getRulesFromQualityProfile(QualityProfile qp) {
     URI uri = createURI(baseUrl, API_RULE_SEARCH, "ps=" + PAGE_SIZE + "&languages=" + qp.getLanguage() + "&qprofile=" + qp.getKey() + "&activation=true");
     return GSON.fromJson(doHttpRequest(uri), ComponentRules.class).getRules();
   }
 
   public Map<String, Integer> getLocPerLanguages(String projectKey) {
-    URI uri = createURI(baseUrl, API_MEASURE_COMPONENT, "componentKey=" + projectKey + "&metricKeys=ncloc_language_distribution");
+    URI uri = createURI(baseUrl, API_MEASURE_COMPONENT, "component=" + projectKey + "&metricKeys=ncloc_language_distribution");
     Map<String, Integer> locPerLanguages = new HashMap<>();
     List<Measure> measures = GSON.fromJson(doHttpRequest(uri), ComponentMeasure.class).getComponent().getMeasures();
     if (measures.isEmpty()) {
@@ -169,6 +184,8 @@ public class ApiConnector {
   private String doHttpRequest(URI uri) {
     HttpRequest request = HttpRequest.newBuilder()
       .uri(uri)
+      .setHeader(HttpHeaders.AUTHORIZATION, "Basic " +
+        Base64.getEncoder().encodeToString((System.getenv("PEACH_TOKEN") +":").getBytes()))
       .build();
 
     try {
