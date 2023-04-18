@@ -15,8 +15,8 @@ import static task.AnalysisQualityLocComparison.compareLoc;
 public class AnalysisResultFromFile {
 
   public static final String OUTPUT_FOLDER = "src/main/output_issues/";
-  public static final String OUTPUT_FOLDER_BASE = OUTPUT_FOLDER + "base/";
-  public static final String OUTPUT_FOLDER_TARGET = OUTPUT_FOLDER + "target/";
+  public static final String OUTPUT_FOLDER_BASE = OUTPUT_FOLDER + "base/"; // = CI
+  public static final String OUTPUT_FOLDER_TARGET = OUTPUT_FOLDER + "target/"; // = Target
 
   public static void main(String[] args) throws IOException {
     Gson gson = new Gson();

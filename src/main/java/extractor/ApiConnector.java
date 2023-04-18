@@ -119,7 +119,8 @@ public class ApiConnector {
   }
 
   private Optional<ComponentIssues> getComponentIssues(int page, String componentKeys) {
-    URI uri = createURI(baseUrl, API_ISSUES_SEARCH, "ps=" + PAGE_SIZE + "&componentKeys=" + componentKeys + "&p=" + page + "&resolved=false");
+    String onlySecurityRules = "&rules=javasecurity:S2076,javasecurity:S2078,javasecurity:S2083,javasecurity:S2091,javasecurity:S2631,javasecurity:S3649,javasecurity:S5131,javasecurity:S5135,javasecurity:S5144,javasecurity:S5145,javasecurity:S5146,javasecurity:S5147,javasecurity:S5334,javasecurity:S5883,javasecurity:S6096,javasecurity:S6173,javasecurity:S6287,javasecurity:S6350,javasecurity:S6384,javasecurity:S6390,javasecurity:S6398,javasecurity:S6399";
+    URI uri = createURI(baseUrl, API_ISSUES_SEARCH, "ps=" + PAGE_SIZE + "&componentKeys=" + componentKeys + "&p=" + page + "&resolved=false" + onlySecurityRules);
     return Optional.ofNullable(GSON.fromJson(doHttpRequest(uri), ComponentIssues.class));
   }
 
